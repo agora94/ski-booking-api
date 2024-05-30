@@ -2,8 +2,23 @@
 import prisma from '../prisma/client.js';
 
 const getResorts = async (req, res) => {
+  const search = req.query.search;
+  console.log('getResorts -> search', search);
   try {
-    const resorts = await prisma.resort.findMany();
+    let resorts;
+    if (search) {
+      resorts = await prisma.resort.findMany({
+        where: {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { location: { contains: search, mode: 'insensitive' } },
+            { description: { contains: search, mode: 'insensitive' } },
+          ],
+        },
+      });
+    } else {
+      resorts = await prisma.resort.findMany();
+    }
     res.json(resorts);
   } catch (err) {
     console.error(err.message);
