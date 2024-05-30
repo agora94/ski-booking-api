@@ -12,10 +12,10 @@ const getResorts = async (req, res) => {
 };
 
 const addResort = async (req, res) => {
-  const { name, location, description } = req.body;
+  const { name, location, longitude, latitude, description } = req.body;
   try {
     const newResort = await prisma.resort.create({
-      data: { name, location, description },
+      data: { name, location, longitude, latitude, description },
     });
     res.json(newResort);
   } catch (err) {

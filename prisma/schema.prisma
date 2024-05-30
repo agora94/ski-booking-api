@@ -19,6 +19,8 @@ model Resort {
   id          Int        @id @default(autoincrement())
   name        String
   location    String
+  longitude   Float
+  latitude    Float
   description String
   bookings    Booking[]
 }
