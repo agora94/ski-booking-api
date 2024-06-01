@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "prisma": {
+    "seed": "node seed.js"
+  },
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "cors": "^2.8.5",
