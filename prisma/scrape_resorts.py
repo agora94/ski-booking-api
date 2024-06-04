@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import re
+import os
 
 
 host = "https://en.wikipedia.org"
@@ -13,7 +15,7 @@ resorts = []
 sections = soup.find_all('ul')
 for section in sections:
     for li in section.find_all('li'):
-        resort_name = li.get_text().split(' — ')[0]
+        resort_name = re.split(' — | - | -- ', li.get_text())[0]
         link = li.find('a')
         url = link.get('href') if link else 'TODO'
         if resort_name:
@@ -32,11 +34,20 @@ for i, resort in enumerate(resorts):
     geodec = infobox.find('span', class_='geo-dec') if infobox else None
     if geodec is not None:
         [latitude, longitude] = geodec.get_text().split(' ')
+
+    website = infobox.find('span', class_='url') if infobox else None
+    website_link = website.find('a') if website else None
     resort['location'] = location.get_text() if location else 'TODO'
     resort['latitude'] = latitude[0:len(latitude)-2] if latitude else 0
     resort['longitude'] = longitude[0:len(longitude)-2] if longitude else 0
+    resort['website'] = website_link.get('href') if website_link else 'TODO'
     del resort['url']
     resorts[i] = resort
+
+try:
+    os.remove('ski_resorts.json')
+except OSError:
+    pass
 
 # Save to JSON file
 with open('ski_resorts.json', 'w') as f:

@@ -12,16 +12,21 @@ model User {
   username String     @unique
   password String
   email    String     @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   bookings Booking[]
 }
 
 model Resort {
   id          Int        @id @default(autoincrement())
-  name        String
+  name        String     @unique
   location    String
   longitude   Float
   latitude    Float
+  website     String     @unique @default("TODO")
   description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   bookings    Booking[]
 }
 
@@ -30,6 +35,8 @@ model Booking {
   userId      Int
   resortId    Int
   booking_date DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   resorts      Resort @relation(fields: [resortId], references: [id])
   users        User   @relation(fields: [userId], references: [id])
 }
